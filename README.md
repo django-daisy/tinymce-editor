@@ -145,3 +145,6 @@ Use a pending publisher for the first release.
 Push a Git tag matching the version in `pyproject.toml`, for example
 `v0.1.1` for version `0.1.1`. GitHub Actions runs the tests, builds and checks
 the wheel and source distribution, then uploads both to PyPI.
+
+To publish an existing tag, open **Actions → Publish to PyPI → Run workflow**
+on GitHub and enter the tag in **release_tag**.
