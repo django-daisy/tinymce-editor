@@ -3,14 +3,14 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.urls import include, path
 
-from django_toastui_editor.fields import ToastUIEditorWidget
+from django_tinymce_editor.fields import TinyMCEWidget
 
 
 class GroupEditorForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ("name", "permissions")
-        widgets = {"name": ToastUIEditorWidget}
+        widgets = {"name": TinyMCEWidget}
 
 
 class GroupEditorAdmin(admin.ModelAdmin):
@@ -22,5 +22,5 @@ admin.site.register(Group, GroupEditorAdmin)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("editor/", include("django_toastui_editor.urls")),
+    path("editor/", include("django_tinymce_editor.urls")),
 ]

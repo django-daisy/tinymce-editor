@@ -64,7 +64,7 @@ _FILENAME = re.compile(r'^[0-9a-f]{32}_[a-zA-Z0-9_-]{1,128}\.(?:png|jpg|gif|webp
 
 def _directory(user):
     owner = hashlib.sha256(str(user.pk).encode('utf-8')).hexdigest()
-    return 'daisy/toastui/' + owner
+    return 'tinymce-editor/' + owner
 
 
 def _serialize(directory, filename):
@@ -79,7 +79,7 @@ def _serialize(directory, filename):
 @require_POST
 def upload(request):
     uploaded = request.FILES.get('file')
-    limit = getattr(settings, 'TOASTUI_EDITOR_MAX_UPLOAD_SIZE', 5 * 1024 * 1024)
+    limit = getattr(settings, 'TINYMCE_EDITOR_MAX_UPLOAD_SIZE', 5 * 1024 * 1024)
     if not uploaded or not uploaded.size or uploaded.size > limit:
         return JsonResponse({'error': 'Missing file or file exceeds the size limit.'}, status=400)
     extension = _extension(uploaded)

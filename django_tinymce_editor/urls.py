@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import attachments
 
-app_name = "django_toastui_editor"
+app_name = "django_tinymce_editor"
 
 urlpatterns = [
     path("upload/", attachments.upload, name="upload"),

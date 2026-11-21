@@ -9,34 +9,39 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
-from django_toastui_editor.fields import ToastUIEditorField, ToastUIEditorWidget
-from django_toastui_editor.attachments import _directory
+from django_tinymce_editor.fields import TinyMCEField, TinyMCEWidget
+from django_tinymce_editor.attachments import _directory
 
 
-class ToastUIEditorWidgetTests(SimpleTestCase):
+class TinyMCEWidgetTests(SimpleTestCase):
     def test_field_and_widget(self):
-        field = ToastUIEditorField(blank=True)
-        self.assertIsInstance(field.formfield().widget, ToastUIEditorWidget)
+        field = TinyMCEField(blank=True)
+        self.assertIsInstance(field.formfield().widget, TinyMCEWidget)
         self.assertIsInstance(field.formfield(widget=forms.Textarea).widget, forms.Textarea)
-        self.assertIsInstance(field.formfield(widget=AdminTextareaWidget).widget, ToastUIEditorWidget)
-        self.assertIsInstance(field.formfield(widget=AdminTextareaWidget()).widget, ToastUIEditorWidget)
-        self.assertIn('toastui-editor-field', ToastUIEditorWidget(upload_url='').render('body', 'hello'))
-        self.assertEqual(field.deconstruct()[1], 'django_toastui_editor.fields.ToastUIEditorField')
-        self.assertIn('toastui-editor.min.js', str(ToastUIEditorWidget().media))
+        self.assertIsInstance(field.formfield(widget=AdminTextareaWidget).widget, TinyMCEWidget)
+        self.assertIsInstance(field.formfield(widget=AdminTextareaWidget()).widget, TinyMCEWidget)
+        self.assertIn('tinymce-editor-field', TinyMCEWidget(upload_url='').render('body', 'hello'))
+        self.assertEqual(field.deconstruct()[1], 'django_tinymce_editor.fields.TinyMCEField')
+        self.assertIn('tinymce/tinymce.min.js', str(TinyMCEWidget().media))
 
-    @override_settings(ROOT_URLCONF="django_toastui_editor.urls")
+    @override_settings(ROOT_URLCONF="django_tinymce_editor.urls")
     def test_editor_works_without_attachment_urls(self):
-        html = ToastUIEditorWidget().render("body", "**Markdown**")
+        html = TinyMCEWidget().render("body", "**Markdown**")
         self.assertIn("**Markdown**", html)
-        self.assertIn("toastui-editor-field", html)
+        self.assertIn("tinymce-editor-field", html)
         self.assertNotIn("data-upload-url", html)
 
     def test_choices_keep_django_widget(self):
-        field = ToastUIEditorField(choices=[('a', 'A')])
+        field = TinyMCEField(choices=[('a', 'A')])
         self.assertIsInstance(field.formfield().widget, forms.Select)
 
 
-class ToastUIEditorAttachmentTests(TestCase):
+    @override_settings(TINYMCE_EDITOR_LICENSE_KEY="")
+    def test_unconfigured_editor_uses_textarea(self):
+        self.assertFalse(TinyMCEWidget().media._js)
+
+
+class TinyMCEAttachmentTests(TestCase):
     def setUp(self):
         self.media = tempfile.TemporaryDirectory()
         self.addCleanup(self.media.cleanup)
@@ -46,9 +51,9 @@ class ToastUIEditorAttachmentTests(TestCase):
         self.owner = get_user_model().objects.create_user(username='owner', password='x', is_staff=True)
         self.other = get_user_model().objects.create_user(username='other', password='x', is_staff=True)
         self.client.force_login(self.owner)
-        self.upload_url = reverse('django_toastui_editor:upload')
-        self.list_url = reverse('django_toastui_editor:attachments')
-        self.delete_url = reverse('django_toastui_editor:delete')
+        self.upload_url = reverse('django_tinymce_editor:upload')
+        self.list_url = reverse('django_tinymce_editor:attachments')
+        self.delete_url = reverse('django_tinymce_editor:delete')
 
     def send_file(self, name='notes.txt', content=b'hello'):
         return self.client.post(self.upload_url, {'file': SimpleUploadedFile(name, content)})
@@ -79,7 +84,7 @@ class ToastUIEditorAttachmentTests(TestCase):
         for name, content in [('x.svg', b'<svg></svg>'), ('x.pdf', b'<script>'),
                               ('x.txt', b'\x00bad'), ('x.html', b'<p>hi</p>')]:
             self.assertEqual(self.send_file(name, content).status_code, 400)
-        with override_settings(TOASTUI_EDITOR_MAX_UPLOAD_SIZE=2):
+        with override_settings(TINYMCE_EDITOR_MAX_UPLOAD_SIZE=2):
             self.assertEqual(self.send_file(content=b'abc').status_code, 400)
 
     def test_admin_authentication_and_csrf(self):
@@ -103,7 +108,7 @@ class ToastUIEditorAttachmentTests(TestCase):
 
     def test_storage_without_listing_still_uploads_and_deletes(self):
         data = self.send_file().json()
-        with patch('django_toastui_editor.attachments.default_storage.listdir', side_effect=NotImplementedError):
+        with patch('django_tinymce_editor.attachments.default_storage.listdir', side_effect=NotImplementedError):
             response = self.client.get(self.list_url)
             self.assertEqual(response.status_code, 501)
             self.assertIn('does not support listing', response.json()['error'])

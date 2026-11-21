@@ -11,7 +11,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_toastui_editor",
+    "django_tinymce_editor",
 ]
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -31,3 +31,5 @@ TEMPLATES = [
         },
     },
 ]
+
+TINYMCE_EDITOR_LICENSE_KEY = "gpl"
