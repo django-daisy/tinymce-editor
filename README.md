@@ -64,7 +64,16 @@ whose default form widget is the editor.
 TinyMCE stores HTML. Sanitize untrusted HTML on the server before rendering
 it, including content submitted directly to the form.
 
-## Enable attachments
+## Paste Markdown
+
+Paste Markdown as plain text with `Ctrl+Shift+V` or `Cmd+Shift+V`. Markdown
+headings, lists, links, and other formatting are converted into editable
+content and saved as HTML. Plain text without Markdown formatting and
+clipboard content that already contains rich HTML use TinyMCE's normal paste.
+The package bundles [markdown-it 15.0.3](https://github.com/markdown-it/markdown-it)
+under its [MIT license](django_tinymce_editor/static/django_tinymce_editor/markdown-it/LICENSE).
+
+## Enable image uploads
 
 Include the editor's URL configuration in your project's URL patterns.
 
@@ -77,14 +86,15 @@ urlpatterns = [
 ]
 ```
 
-The routes use Django's session and authentication middleware and require an
-active staff account. Uploads and deletions require a CSRF token. Each staff
-user can manage their own uploads. The size limit defaults to 5 MiB and can
-be set in bytes with `TINYMCE_EDITOR_MAX_UPLOAD_SIZE`.
+Staff users can upload an image from the **Upload** tab in TinyMCE's image
+dialog. The routes use Django's session and authentication middleware and
+require an active staff account. Uploads and deletions require a CSRF token.
+The size limit defaults to 5 MiB and can be set in bytes with
+`TINYMCE_EDITOR_MAX_UPLOAD_SIZE`.
 
-The editor uses Django's default file storage. Listing attachments requires
-storage with `listdir()` support. Files stay in storage until explicitly
-deleted, even after their links or the objects containing them are removed.
+The editor uses Django's default file storage. The attachment API still lets
+staff list and delete their own uploads. Listing requires storage with
+`listdir()` support. Files stay in storage until explicitly deleted.
 
 ## Production security
 
@@ -124,3 +134,14 @@ After installing this project locally, run
 `python -m django test --settings=tests.settings` from the repository root.
 With Django Daisy installed, run the same command with
 `--settings=tests.settings_daisy` to verify that admin too.
+
+## Publish a release
+
+Configure a [PyPI Trusted Publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
+for project `django-tinymce-editor`, GitHub owner `django-daisy`,
+repository `tinymce-editor`, workflow `publish.yml`, and environment `pypi`.
+Use a pending publisher for the first release.
+
+Push a Git tag matching the version in `pyproject.toml`, for example
+`v0.1.1` for version `0.1.1`. GitHub Actions runs the tests, builds and checks
+the wheel and source distribution, then uploads both to PyPI.

@@ -34,6 +34,7 @@ class TinyMCEWidget(forms.Textarea):
             return forms.Media()
         return forms.Media(js=(
             getattr(settings, 'TINYMCE_EDITOR_SCRIPT', 'django_tinymce_editor/tinymce/tinymce.min.js'),
+            'django_tinymce_editor/markdown-it/markdown-it.umd.min.js',
             'django_tinymce_editor/editor.js',
         ))
 

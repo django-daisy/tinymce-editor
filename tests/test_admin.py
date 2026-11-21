@@ -18,6 +18,7 @@ class EditorAdminTests(TestCase):
         self.assertContains(response, "Original &lt;strong&gt;HTML&lt;/strong&gt;")
         self.assertContains(response, "tinymce-editor-field")
         self.assertContains(response, "django_tinymce_editor/tinymce/tinymce.min.js")
+        self.assertContains(response, "django_tinymce_editor/markdown-it/markdown-it.umd.min.js")
         self.assertContains(response, 'data-upload-url="/editor/upload/"')
 
         response = self.client.post(url, {"name": "<p>Updated <em>HTML</em></p>"})
@@ -28,6 +29,7 @@ class EditorAdminTests(TestCase):
 
     def test_assets_and_migrations(self):
         self.assertIsNotNone(finders.find("django_tinymce_editor/editor.js"))
+        self.assertIsNotNone(finders.find("django_tinymce_editor/markdown-it/markdown-it.umd.min.js"))
         for asset in (
             "tinymce.min.js",
             "themes/silver/theme.min.js",
