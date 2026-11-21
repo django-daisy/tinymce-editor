@@ -33,7 +33,7 @@ class TinyMCEWidget(forms.Textarea):
         if not getattr(settings, 'TINYMCE_EDITOR_LICENSE_KEY', ''):
             return forms.Media()
         return forms.Media(js=(
-            getattr(settings, 'TINYMCE_EDITOR_SCRIPT', 'tinymce/tinymce.min.js'),
+            getattr(settings, 'TINYMCE_EDITOR_SCRIPT', 'django_tinymce_editor/tinymce/tinymce.min.js'),
             'django_tinymce_editor/editor.js',
         ))
 

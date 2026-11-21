@@ -8,8 +8,8 @@ version = "0.1.0"
 description = "A TinyMCE rich text editor for Django forms and admin"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
-license-files = ["LICENSE"]
+license = "MIT AND GPL-2.0-or-later"
+license-files = ["LICENSE", "django_tinymce_editor/static/django_tinymce_editor/tinymce/license.md", "django_tinymce_editor/static/django_tinymce_editor/tinymce/notices.txt"]
 dependencies = ["Django>=4.2"]
 
 [tool.setuptools.packages.find]
@@ -17,4 +17,4 @@ include = ["django_tinymce_editor"]
 namespaces = false
 
 [tool.setuptools.package-data]
-django_tinymce_editor = ["static/django_tinymce_editor/*"]
+django_tinymce_editor = ["static/django_tinymce_editor/editor.js", "static/django_tinymce_editor/tinymce/**/*"]

@@ -10,19 +10,25 @@ migrations.
 pip install .
 ```
 
-Add `"django_tinymce_editor"` to `INSTALLED_APPS`. Download a patched
-[TinyMCE 8 self-hosted distribution](https://www.tiny.cloud/get-tiny/self-hosted/)
-and place the full distribution under `tinymce/` in a directory listed in
-`STATICFILES_DIRS`. Keep the scripts, plugins, skins, and themes together.
+Add `"django_tinymce_editor"` to `INSTALLED_APPS`. The package includes the
+TinyMCE 8.10.2 Community distribution, including its plugins, skins, and
+themes. Django serves these through its staticfiles app.
+
 Set `TINYMCE_EDITOR_LICENSE_KEY = "gpl"` if your deployment uses TinyMCE
 under GPLv2+. For a commercial deployment, configure a valid self-hosted
 license key and install the license key manager as described by
 [TinyMCE](https://www.tiny.cloud/docs/tinymce/latest/license-key/).
 
-Run `collectstatic` and serve the complete TinyMCE directory, including the
-original filenames TinyMCE loads dynamically. Override
-`TINYMCE_EDITOR_SCRIPT` if the script is stored at another static path.
+For deployment, run `collectstatic` and serve the original filenames alongside
+any hashed copies, because TinyMCE loads its plugins and skins dynamically.
+Set `TINYMCE_EDITOR_SCRIPT` to use a separate self-hosted build.
 With the license setting unset, the widget renders as a textarea.
+
+The Django integration is MIT-licensed. The bundled TinyMCE distribution has
+its own [license](django_tinymce_editor/static/django_tinymce_editor/tinymce/license.md)
+and [third-party notices](django_tinymce_editor/static/django_tinymce_editor/tinymce/notices.txt).
+The corresponding upstream code is available in the
+[TinyMCE 8.10.2 source tree](https://github.com/tinymce/tinymce/tree/8.10.2).
 
 ## Edit an existing field in the admin
 
@@ -106,7 +112,7 @@ deleted, even after their links or the objects containing them are removed.
   verify listing performance at your expected attachment volume.
 - **Dependencies.** Deploy on a
   [supported Django release](https://www.djangoproject.com/download/#supported-versions)
-  and pin a patched self-hosted TinyMCE build in your deployment. Track the
+  and keep the bundled TinyMCE runtime or your custom build up to date. Track the
   [TinyMCE changelog](https://www.tiny.cloud/docs/tinymce/latest/changelog/) for
   security updates. Before rollout, verify TinyMCE loads under your production
   Content Security Policy and check upload and download behavior with the

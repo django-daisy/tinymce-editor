@@ -17,7 +17,7 @@ class EditorAdminTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "Original &lt;strong&gt;HTML&lt;/strong&gt;")
         self.assertContains(response, "tinymce-editor-field")
-        self.assertContains(response, "tinymce/tinymce.min.js")
+        self.assertContains(response, "django_tinymce_editor/tinymce/tinymce.min.js")
         self.assertContains(response, 'data-upload-url="/editor/upload/"')
 
         response = self.client.post(url, {"name": "<p>Updated <em>HTML</em></p>"})
@@ -28,5 +28,16 @@ class EditorAdminTests(TestCase):
 
     def test_assets_and_migrations(self):
         self.assertIsNotNone(finders.find("django_tinymce_editor/editor.js"))
+        for asset in (
+            "tinymce.min.js",
+            "themes/silver/theme.min.js",
+            "icons/default/icons.min.js",
+            "models/dom/model.min.js",
+            "plugins/image/plugin.min.js",
+            "skins/ui/oxide/skin.min.css",
+            "skins/content/default/content.min.css",
+        ):
+            with self.subTest(asset=asset):
+                self.assertIsNotNone(finders.find(f"django_tinymce_editor/tinymce/{asset}"))
         loader = MigrationLoader(connection)
         self.assertNotIn("django_tinymce_editor", loader.migrated_apps)
