@@ -31,5 +31,3 @@ TEMPLATES = [
         },
     },
 ]
-
-TINYMCE_EDITOR_LICENSE_KEY = "gpl"

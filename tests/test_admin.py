@@ -17,6 +17,7 @@ class EditorAdminTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "Original &lt;strong&gt;HTML&lt;/strong&gt;")
         self.assertContains(response, "tinymce-editor-field")
+        self.assertContains(response, 'data-tinymce-license-key="gpl"')
         self.assertContains(response, "django_tinymce_editor/tinymce/tinymce.min.js")
         self.assertContains(response, "django_tinymce_editor/markdown-it/markdown-it.umd.min.js")
         self.assertContains(response, 'data-upload-url="/editor/upload/"')

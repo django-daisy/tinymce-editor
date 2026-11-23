@@ -16,7 +16,7 @@ class TinyMCEWidget(forms.Textarea):
         context = super().get_context(name, value, attrs)
         widget_attrs = context['widget']['attrs']
         widget_attrs['class'] = (widget_attrs.get('class', '') + ' tinymce-editor-field').strip()
-        widget_attrs['data-tinymce-license-key'] = getattr(settings, 'TINYMCE_EDITOR_LICENSE_KEY', '')
+        widget_attrs['data-tinymce-license-key'] = getattr(settings, 'TINYMCE_EDITOR_LICENSE_KEY', 'gpl')
         if self.upload_url is not None:
             widget_attrs['data-upload-url'] = self.upload_url
         else:
@@ -30,7 +30,7 @@ class TinyMCEWidget(forms.Textarea):
 
     @property
     def media(self):
-        if not getattr(settings, 'TINYMCE_EDITOR_LICENSE_KEY', ''):
+        if not getattr(settings, 'TINYMCE_EDITOR_LICENSE_KEY', 'gpl'):
             return forms.Media()
         return forms.Media(js=(
             getattr(settings, 'TINYMCE_EDITOR_SCRIPT', 'django_tinymce_editor/tinymce/tinymce.min.js'),

@@ -14,15 +14,15 @@ Add `"django_tinymce_editor"` to `INSTALLED_APPS`. The package includes the
 TinyMCE 8.10.2 Community distribution, including its plugins, skins, and
 themes. Django serves these through its staticfiles app.
 
-Set `TINYMCE_EDITOR_LICENSE_KEY = "gpl"` if your deployment uses TinyMCE
-under GPLv2+. For a commercial deployment, configure a valid self-hosted
+The bundled editor defaults to `TINYMCE_EDITOR_LICENSE_KEY = "gpl"` for
+use under GPLv2+. For a commercial deployment, configure a valid self-hosted
 license key and install the license key manager as described by
 [TinyMCE](https://www.tiny.cloud/docs/tinymce/latest/license-key/).
 
 For deployment, run `collectstatic` and serve the original filenames alongside
 any hashed copies, because TinyMCE loads its plugins and skins dynamically.
 Set `TINYMCE_EDITOR_SCRIPT` to use a separate self-hosted build.
-With the license setting unset, the widget renders as a textarea.
+Set `TINYMCE_EDITOR_LICENSE_KEY = ""` to render a plain textarea.
 
 The Django integration is MIT-licensed. The bundled TinyMCE distribution has
 its own [license](django_tinymce_editor/static/django_tinymce_editor/tinymce/license.md)
